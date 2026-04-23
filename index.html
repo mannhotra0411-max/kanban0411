@@ -3,52 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Kanban | Workflow Management</title>
+    <title>Enterprise Kanban | Productivity Suite</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <span class="brand">Early<span>Edge</span></span>
-            <div class="actions">
-                <button id="add-task-btn" class="btn-primary">
-                    <span class="icon">+</span> New Task
-                </button>
+    <header class="app-header">
+        <div class="header-container">
+            <div class="logo-group">
+                <div class="logo-icon"></div>
+                <h1>Workflow<span>Pro</span></h1>
             </div>
+            <button id="addTaskBtn" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Create Task
+            </button>
         </div>
-    </nav>
+    </header>
 
-    <main class="board-container">
-        <div class="kanban-board">
-            <section class="column" id="todo">
+    <main class="board-wrapper">
+        <div class="kanban-container">
+            <section class="column" data-status="todo">
                 <div class="column-header">
-                    <span class="status-dot todo-dot"></span>
                     <h2>To Do</h2>
-                    <span class="task-count">0</span>
+                    <span class="badge" id="count-todo">0</span>
                 </div>
-                <div class="drop-zone" data-column="todo">
-                    </div>
+                <div class="drop-zone" id="todo-zone"></div>
             </section>
 
-            <section class="column" id="inprogress">
+            <section class="column" data-status="inprogress">
                 <div class="column-header">
-                    <span class="status-dot progress-dot"></span>
                     <h2>In Progress</h2>
-                    <span class="task-count">0</span>
+                    <span class="badge" id="count-inprogress">0</span>
                 </div>
-                <div class="drop-zone" data-column="inprogress">
-                </div>
+                <div class="drop-zone" id="inprogress-zone"></div>
             </section>
 
-            <section class="column" id="done">
+            <section class="column" data-status="done">
                 <div class="column-header">
-                    <span class="status-dot done-dot"></span>
                     <h2>Completed</h2>
-                    <span class="task-count">0</span>
+                    <div class="header-actions">
+                        <span class="badge" id="count-done">0</span>
+                        <button id="clearDoneBtn" class="btn-icon-text" title="Clear all completed">Clear</button>
+                    </div>
                 </div>
-                <div class="drop-zone" data-column="done">
-                </div>
+                <div class="drop-zone" id="done-zone"></div>
             </section>
         </div>
     </main>
