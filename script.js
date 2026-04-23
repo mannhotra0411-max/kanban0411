@@ -1,76 +1,126 @@
+/**
+ * Senior Developer Implementation:
+ * State-driven Kanban Board with LocalStorage Persistence
+ */
+
+let state = {
+    tasks: JSON.parse(localStorage.getItem('kanban-data')) || []
+};
+
+// Initialize App
 document.addEventListener('DOMContentLoaded', () => {
-    const addBtn = document.getElementById('add-task-btn');
-    const dropZones = document.querySelectorAll('.drop-zone');
+    renderBoard();
+    initGlobalEvents();
+});
 
-    // Initial Data
-    const initialTasks = [
-        { id: 1, text: "Structure Q3 Financial Report", status: "todo" },
-        { id: 2, text: "Audit Lead Gen Funnel", status: "inprogress" },
-        { id: 3, text: "Client Onboarding: Early Edge", status: "done" }
-    ];
-
-    // Load Initial State
-    initialTasks.forEach(task => createTaskElement(task.text, task.status));
-    updateCounts();
-
-    addBtn.addEventListener('click', () => {
-        const text = prompt("Enter task title:");
-        if (text && text.trim()) {
-            createTaskElement(text, 'todo');
-            updateCounts();
+function initGlobalEvents() {
+    // Add Task
+    document.getElementById('addTaskBtn').addEventListener('click', () => {
+        const text = prompt("Enter task details:");
+        if (text?.trim()) {
+            const newTask = {
+                id: Date.now().toString(),
+                text: text.trim(),
+                status: 'todo'
+            };
+            state.tasks.push(newTask);
+            saveAndSync();
         }
     });
 
-    function createTaskElement(text, columnId) {
-        const card = document.createElement('div');
-        card.className = 'task-card';
-        card.draggable = true;
-        card.innerText = text;
-
-        card.addEventListener('dragstart', () => card.classList.add('dragging'));
-        card.addEventListener('dragend', () => {
-            card.classList.remove('dragging');
-            updateCounts();
-        });
-
-        document.querySelector(`#${columnId} .drop-zone`).appendChild(card);
-    }
-
-    dropZones.forEach(zone => {
-        zone.addEventListener('dragover', e => {
-            e.preventDefault();
-            zone.classList.add('active');
-            const draggingCard = document.querySelector('.dragging');
-            const afterElement = getDragAfterElement(zone, e.clientY);
-            
-            if (afterElement == null) {
-                zone.appendChild(draggingCard);
-            } else {
-                zone.insertBefore(draggingCard, afterElement);
-            }
-        });
-
-        zone.addEventListener('dragleave', () => zone.classList.remove('active'));
-        zone.addEventListener('drop', () => zone.classList.remove('active'));
+    // Clear Done
+    document.getElementById('clearDoneBtn').addEventListener('click', () => {
+        if(confirm("Clear all completed tasks?")) {
+            state.tasks = state.tasks.filter(t => t.status !== 'done');
+            saveAndSync();
+        }
     });
 
-    function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
-    }
-
-    function updateCounts() {
-        document.querySelectorAll('.column').forEach(col => {
-            const count = col.querySelectorAll('.task-card').length;
-            col.querySelector('.task-count').innerText = count;
+    // Drag and Drop Logic
+    const zones = document.querySelectorAll('.drop-zone');
+    zones.forEach(zone => {
+        zone.addEventListener('dragover', e => {
+            e.preventDefault();
+            zone.classList.add('drag-over');
         });
+
+        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            const taskId = e.dataTransfer.getData('text/plain');
+            const newStatus = zone.parentElement.dataset.status;
+            
+            updateTaskStatus(taskId, newStatus);
+        });
+    });
+}
+
+function updateTaskStatus(id, newStatus) {
+    state.tasks = state.tasks.map(t => t.id === id ? { ...t, status: newStatus } : t);
+    saveAndSync();
+}
+
+function deleteTask(id) {
+    state.tasks = state.tasks.filter(t => t.id !== id);
+    saveAndSync();
+}
+
+function editTask(id) {
+    const task = state.tasks.find(t => t.id === id);
+    const newText = prompt("Edit task:", task.text);
+    if (newText?.trim()) {
+        task.text = newText.trim();
+        saveAndSync();
     }
-});
+}
+
+function saveAndSync() {
+    localStorage.setItem('kanban-data', JSON.stringify(state.tasks));
+    renderBoard();
+}
+
+function renderBoard() {
+    // Clear all zones
+    const zones = {
+        todo: document.getElementById('todo-zone'),
+        inprogress: document.getElementById('inprogress-zone'),
+        done: document.getElementById('done-zone')
+    };
+
+    Object.values(zones).forEach(z => z.innerHTML = '');
+
+    // Render tasks
+    state.tasks.forEach(task => {
+        const card = createTaskCard(task);
+        zones[task.status].appendChild(card);
+    });
+
+    // Update counts
+    document.getElementById('count-todo').innerText = state.tasks.filter(t => t.status === 'todo').length;
+    document.getElementById('count-inprogress').innerText = state.tasks.filter(t => t.status === 'inprogress').length;
+    document.getElementById('count-done').innerText = state.tasks.filter(t => t.status === 'done').length;
+}
+
+function createTaskCard(task) {
+    const div = document.createElement('div');
+    div.className = 'task-card';
+    div.draggable = true;
+    div.innerHTML = `
+        <div class="card-content">${task.text}</div>
+        <div class="card-actions">
+            <button class="btn-icon edit-btn" onclick="editTask('${task.id}')">✎</button>
+            <button class="btn-icon delete-btn" onclick="deleteTask('${task.id}')">✕</button>
+        </div>
+    `;
+
+    div.addEventListener('dragstart', (e) => {
+        div.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', task.id);
+    });
+
+    div.addEventListener('dragend', () => div.classList.remove('dragging'));
+
+    return div;
+}
