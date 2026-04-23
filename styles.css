@@ -1,40 +1,38 @@
 :root {
-    --bg-main: #f8fafc;
-    --nav-bg: #ffffff;
+    --bg-app: #f8fafc;
+    --bg-column: #f1f5f9;
+    --white: #ffffff;
     --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --text-dark: #1e293b;
-    --text-muted: #64748b;
-    --column-bg: #f1f5f9;
-    --card-bg: #ffffff;
-    --border-color: #e2e8f0;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --primary-dark: #4f46e5;
+    --slate-700: #334155;
+    --slate-500: #64748b;
+    --emerald: #10b981;
+    --rose: #f43f5e;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 12px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-main);
-    color: var(--text-dark);
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-app);
+    color: var(--slate-700);
+    line-height: 1.5;
 }
 
-/* Navbar Styling */
-.navbar {
-    background: var(--nav-bg);
+/* Layout */
+.app-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
     padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-.nav-container {
+.header-container {
     max-width: 1400px;
     margin: 0 auto;
     display: flex;
@@ -42,124 +40,75 @@ body {
     align-items: center;
 }
 
-.brand {
-    font-weight: 700;
-    font-size: 1.25rem;
-    letter-spacing: -0.5px;
-}
+.logo-group { display: flex; align-items: center; gap: 10px; }
+.logo-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 8px; }
+.logo-group h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+.logo-group span { color: var(--primary); }
 
-.brand span {
-    color: var(--primary);
-}
+.board-wrapper { padding: 2rem; overflow-x: auto; height: calc(100vh - 73px); }
+.kanban-container { display: flex; gap: 1.5rem; min-width: 1000px; height: 100%; }
 
-.btn-primary {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-primary:hover {
-    background: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-}
-
-/* Board Layout */
-.board-container {
-    flex: 1;
-    padding: 2rem;
-    overflow-x: auto;
-}
-
-.kanban-board {
-    display: flex;
-    gap: 1.5rem;
-    height: 100%;
-    align-items: flex-start;
-}
-
+/* Columns */
 .column {
-    background: var(--column-bg);
-    width: 350px;
-    min-width: 350px;
-    border-radius: 12px;
+    background: var(--bg-column);
+    width: 380px;
+    border-radius: var(--radius);
     display: flex;
     flex-direction: column;
-    max-height: 100%;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
 }
 
 .column-header {
     padding: 1.25rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
 }
 
-.column-header h2 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    flex: 1;
-}
+.column-header h2 { font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); }
+.badge { background: var(--border); padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
 
-.status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
+.drop-zone { flex: 1; padding: 0.75rem; overflow-y: auto; transition: background 0.2s; border-radius: 0 0 var(--radius) var(--radius); }
+.drop-zone.drag-over { background: #e2e8f0; }
 
-.todo-dot { background: #94a3b8; }
-.progress-dot { background: #f59e0b; }
-.done-dot { background: #10b981; }
-
-.task-count {
-    background: #e2e8f0;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-.drop-zone {
-    padding: 0.75rem;
-    flex: 1;
-    min-height: 150px;
-    transition: background 0.2s ease;
-}
-
-.drop-zone.active {
-    background: #e2e8f0;
-    border-radius: 0 0 12px 12px;
-}
-
-/* Card Styling */
+/* Task Cards */
 .task-card {
-    background: var(--card-bg);
+    background: var(--white);
     padding: 1rem;
     border-radius: 10px;
-    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
     margin-bottom: 0.75rem;
-    border: 1px solid var(--border-color);
     cursor: grab;
-    transition: all 0.2s ease;
+    transition: transform 0.1s, box-shadow 0.2s;
 }
 
-.task-card:hover {
-    border-color: var(--primary);
-    box-shadow: var(--shadow-md);
+.task-card:hover { border-color: var(--primary); }
+.task-card.dragging { opacity: 0.4; transform: scale(0.95); }
+
+.card-content { font-size: 0.95rem; font-weight: 500; margin-bottom: 1rem; color: var(--slate-700); }
+.card-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* Buttons */
+.btn-primary {
+    background: var(--primary); color: white; border: none; padding: 0.6rem 1.2rem;
+    border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
 }
 
-.task-card.dragging {
-    opacity: 0.5;
-    transform: rotate(2deg) scale(1.02);
-    cursor: grabbing;
+.btn-icon {
+    background: none; border: none; cursor: pointer; padding: 4px; border-radius: 4px; color: var(--slate-500);
+}
+
+.btn-icon:hover { background: var(--bg-app); color: var(--primary); }
+.delete-btn:hover { color: var(--rose); }
+
+.btn-icon-text {
+    background: none; border: none; color: var(--slate-500); font-size: 0.75rem; font-weight: 600; cursor: pointer;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .board-wrapper { padding: 1rem; }
+    .kanban-container { min-width: auto; flex-direction: column; }
+    .column { width: 100%; }
 }
