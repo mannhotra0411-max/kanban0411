@@ -3,45 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Board</title>
+    <title>Enterprise Kanban | Workflow Management</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="board-header">
-        <h1>Project Kanban</h1>
-        <button id="add-task-btn">+ Add New Task</button>
-    </div>
-
-    <div class="kanban-board">
-        <div class="kanban-column" id="todo" data-status="todo">
-            <div class="column-header">
-                <h2>To Do</h2>
-            </div>
-            <div class="column-content">
-                <div class="task" draggable="true">Finalize LinkedIn outreach sequence</div>
-                <div class="task" draggable="true">Scrape initial B2B prospect list</div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="brand">Early<span>Edge</span></span>
+            <div class="actions">
+                <button id="add-task-btn" class="btn-primary">
+                    <span class="icon">+</span> New Task
+                </button>
             </div>
         </div>
+    </nav>
 
-        <div class="kanban-column" id="in-progress" data-status="in-progress">
-            <div class="column-header">
-                <h2>Doing</h2>
-            </div>
-            <div class="column-content">
-                <div class="task" draggable="true">Configure cold email domains</div>
-                <div class="task" draggable="true">Draft core value proposition</div>
-            </div>
-        </div>
+    <main class="board-container">
+        <div class="kanban-board">
+            <section class="column" id="todo">
+                <div class="column-header">
+                    <span class="status-dot todo-dot"></span>
+                    <h2>To Do</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="drop-zone" data-column="todo">
+                    </div>
+            </section>
 
-        <div class="kanban-column" id="done" data-status="done">
-            <div class="column-header">
-                <h2>Done</h2>
-            </div>
-            <div class="column-content">
-                <div class="task" draggable="true">Define Ideal Customer Profile (ICP)</div>
-            </div>
+            <section class="column" id="inprogress">
+                <div class="column-header">
+                    <span class="status-dot progress-dot"></span>
+                    <h2>In Progress</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="drop-zone" data-column="inprogress">
+                </div>
+            </section>
+
+            <section class="column" id="done">
+                <div class="column-header">
+                    <span class="status-dot done-dot"></span>
+                    <h2>Completed</h2>
+                    <span class="task-count">0</span>
+                </div>
+                <div class="drop-zone" data-column="done">
+                </div>
+            </section>
         </div>
-    </div>
+    </main>
 
     <script src="script.js"></script>
 </body>
