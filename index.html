@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="board-header">
+        <h1>Project Kanban</h1>
+        <button id="add-task-btn">+ Add New Task</button>
+    </div>
+
+    <div class="kanban-board">
+        <div class="kanban-column" id="todo" data-status="todo">
+            <div class="column-header">
+                <h2>To Do</h2>
+            </div>
+            <div class="column-content">
+                <div class="task" draggable="true">Finalize LinkedIn outreach sequence</div>
+                <div class="task" draggable="true">Scrape initial B2B prospect list</div>
+            </div>
+        </div>
+
+        <div class="kanban-column" id="in-progress" data-status="in-progress">
+            <div class="column-header">
+                <h2>Doing</h2>
+            </div>
+            <div class="column-content">
+                <div class="task" draggable="true">Configure cold email domains</div>
+                <div class="task" draggable="true">Draft core value proposition</div>
+            </div>
+        </div>
+
+        <div class="kanban-column" id="done" data-status="done">
+            <div class="column-header">
+                <h2>Done</h2>
+            </div>
+            <div class="column-content">
+                <div class="task" draggable="true">Define Ideal Customer Profile (ICP)</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
